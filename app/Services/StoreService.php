@@ -83,6 +83,7 @@ class StoreService
         }
         $groupedData = $this->rankAndGroupData($csvData);
 
+        // Save parsed data to .json file
         $jsonContent = json_encode($groupedData);
         Storage::put($parsedDataFilename ?? $this->parsedDataFilename, $jsonContent);
 
@@ -102,6 +103,7 @@ class StoreService
         $biweekly = $data[Cycle::BIWEEKLY->value];
         $monthly = $data[Cycle::MONTHLY->value];
 
+        // Count needed number of stores in a week
         $storesInWeek = count($weekly) + count($biweekly)/2 + count($monthly)/4;
         $notWeeklyStoresInWeek = (int) ceil($storesInWeek - count($weekly));
 
@@ -109,6 +111,7 @@ class StoreService
             throw new \Exception('No feasible solution found');
         }
 
+        // Give them remaining field to indiciate store's number of visit
         $biweekly = array_map(function ($obj) {
             $obj['remaining'] = 2;
             return $obj;
@@ -118,6 +121,7 @@ class StoreService
             return $obj;
         }, $monthly);
 
+        // Combile biweekly and monthly and sort to get smaller ranking value and prioritize biweekly (avoid furthest biweekly not chosen)
         $mergedArray = array_merge($biweekly, $monthly);
         usort($mergedArray, function ($a, $b) {
             if ($a['remaining'] === $b['remaining']) {
@@ -129,6 +133,7 @@ class StoreService
         $weeklyStores = [];
         for ($i = 0; $i < 4; $i++) {
             $sliced = array_slice($mergedArray, 0, $notWeeklyStoresInWeek);
+            // combine with weekly data, as weekly data will always be chosen in each week
             $selected = array_merge($weekly, $sliced);
             usort($selected, function ($a, $b) {
                 return $a['ranking'] <=> $b['ranking'];
@@ -155,15 +160,14 @@ class StoreService
             $base = intdiv($numStores, $numSales);
             $remainder = $numStores % $numSales;
 
+            // sales var
             $salesSchedule = [];
             $storeIndex = 0;
-
             for ($i = 0; $i < $numSales; $i++) {
                 // Assign extra store to the first $remainder sales reps
                 $numForSalesRep = $base + ($i < $remainder ? 1 : 0);
                 $salesStore = array_slice($weekStores, $storeIndex, $numForSalesRep);
                 $storeIndex += $numForSalesRep;
-
 
                 // Now divide those stores into 6 days for the sales rep
                 $storesPerDay = [];
