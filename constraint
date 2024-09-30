@@ -1,0 +1,50 @@
+Asumsi:
+
+1. Perhitungan bulan baru tidak selalu dimulai dari hari senin, sehingga 1 store bisa di visit 2x dalam seminggu jika ada dalam 2 bulan berbeda.
+   contoh 1 store di visit pada Senin 30 September dan Selasa 1 Oktober adalah valid (1 utk laporan Sep, 1 lagi utk laporan Okt).
+2. Kunjungan biweekly store, bisa dilakukan dalam 2 minggu berturut-turut, misal minggu 1 dan 2.
+3. Perhitungan hari pertama dan akhir di setiap minggu, mengikuti hari pertama di bulan tersebut. Contoh Oktober 2024 dimulai dari hari selasa, sehingga Minggu pertama dimulai dari hari Selasa hingga Senin di pekan berikutnya. Memungkinkan terjadinya kunjungan pada hari Senin (sebagai hari akhir minggu pertama) dan keesokan harinya hari Selasa (sebagai kunjungan hari pertama minggu kedua).
+4. Untuk mempermudah perhitungan di bulan Feb (hanya 28 hari), hanya menggunakan 4 minggu.
+
+Background
+
+-   The problem is a routing problem similar to the Traveling Salesman Problem (TSP).
+-   While the simple TSP can be solved using exact algorithms, the cycle requirement leads me to consider this as an NP-hard routing problem.
+-   Three feasible solutions came to mind:
+
+1. Greedy Algorithm
+   A heuristic approach used to obtain an initial solution in metaheuristic methods.
+   Pros: Easy to implement; fast execution.
+   Cons: May not be optimal, especially when facing anomalous data.
+
+2. K-means Clustering Algorithm
+   Typically used for clustering tasks rather than routing problems, but in this case, it can cluster stores, allowing sales to focus on a limited area (cluster).
+   Pros: Fast execution; easier to define the local search problem.
+   Cons: Difficult to implement in PHP (often done in Python); limiting to 30 stores a day requires more adjustments and customization.
+
+3. Metaheuristic
+   A suitable solution for complex routing problems.
+   Pros: Can provide accurate solutions.
+   Cons: Development can be time-consuming and requires a clearly defined problem to address.
+
+After considering the above options, I chose the Greedy Algorithm approach to ensure the routing can be completed in under 10 days.
+
+Asumsi:
+
+1. Perhitungan bulan baru tidak selalu dimulai dari hari senin, sehingga 1 store bisa di visit 2x dalam 1 minggu menurut kalender jika ada dalam 2 bulan berbeda.
+   contoh 1 store di visit pada Senin 30 September dan Selasa 1 Oktober adalah valid (1 utk laporan Sep, 1 lagi utk laporan Okt).
+2. Kunjungan biweekly store, bisa dilakukan dalam 2 minggu berturut-turut, misal minggu 1 dan 2.
+3. Perhitungan hari pertama dan akhir di setiap minggu, mengikuti hari pertama di bulan tersebut. Contoh Oktober 2024 dimulai dari hari selasa, sehingga Minggu pertama dimulai dari hari Selasa hingga Senin di pekan berikutnya. Memungkinkan terjadinya kunjungan pada hari Senin (sebagai hari akhir minggu pertama) dan keesokan harinya hari Selasa (sebagai kunjungan hari pertama minggu kedua).
+4. Requirement untuk weekly stores yang membutuhkan kunjungan seminggu sekali, tidak dilakukan di minggu ke-5 (biasa hanya ada 1-2 hari saja sehingga tidak memungkinkan jika didapati weekly stores dalam jumlah besar). Minggu ke-5 bisa digunakan untuk kunjungnan yang gagal / implementation gap.
+
+Constraints:
+
+Sales = 10 -> max 30 stores a day
+1 week = 6 working days = 1800 stores (10 x 30 x 6 = 1800)
+
+Maximum stores/month for each cycle:
+Weekly = 1800 stores
+Biweekly = 3600 stores (1800 stores/week)
+Monthly = 7200 stores (1800 stores/week)
+
+Maximum stores allowed = weekly + biweekly/2 + monthly/4
