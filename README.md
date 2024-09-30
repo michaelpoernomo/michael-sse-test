@@ -9,7 +9,7 @@
 3. Perhitungan hari pertama dan akhir di setiap minggu mengikuti hari pertama di bulan tersebut.  
    Contoh: Oktober 2024 dimulai dari hari Selasa, sehingga Minggu pertama dimulai dari hari Selasa hingga Senin di pekan berikutnya. Memungkinkan terjadinya kunjungan pada hari Senin (sebagai hari akhir minggu pertama) dan keesokan harinya hari Selasa (sebagai kunjungan hari pertama minggu kedua).
 
-4. Untuk mempermudah perhitungan di bulan Feb (hanya 28 hari), hanya menggunakan 4 minggu.
+4. Requirement untuk weekly stores yang membutuhkan kunjungan seminggu sekali, tidak dilakukan di minggu ke-5 (biasa hanya ada 1-2 hari saja sehingga tidak memungkinkan jika didapati weekly stores dalam jumlah besar). Minggu ke-5 bisa digunakan untuk kunjungnan yang gagal / implementation gap.
 
 5. Mempertimbangkan jarak antar stores yang dikunjungi, namun tidak memperhitungkan jarak pergi dan pulang dari HQ.
 
